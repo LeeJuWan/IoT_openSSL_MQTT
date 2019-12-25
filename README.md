@@ -5,7 +5,7 @@ Protocol : MQTT
 Broker : Mosquitto  
 
 ### Tip
-인증서의 비밀번호와 서버의 이름 및 인증서에 필요한 사항은 모든사항은 수정 가능  
+서버.csr , 클라이언트.csr의 비밀번호와 서버의 Common이름 및 인증서에 필요한 사항은 모든사항은 수정 가능  
 
 ### 테스트 환경
 CentOS Linux release 7.6.1810 (Core)  
