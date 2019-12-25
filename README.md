@@ -1,7 +1,7 @@
 # openssl_script
 
-IoT 암호화 통신에 필요한 OpenSSL 인증서 자동 생성 스크립트
-Protocol : MQTT
+IoT 암호화 통신에 필요한 OpenSSL 인증서 자동 생성 스크립트  
+Protocol : MQTT  
 Broker : Mosquitto  
 
 ### Tip
