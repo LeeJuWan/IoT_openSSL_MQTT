@@ -151,3 +151,12 @@ if [ "`openssl verify -CAfile ca.crt client.crt`" = "client.crt: OK" ]
 fi
 
 echo "=======================Finish OpenSSL SHELL================="
+
+# step_10 send key data esp8266
+expect << EOL
+spawn openssl x509 -in client.crt -outform der -out clientesp.der
+spawn openssl rsa -in client.key -outform der -out espkey.der
+expect eof
+EOL
+`openssl x509 -noout -in server.crt -fingerprint | awk -F = '{print$2}' > hash_file`
+echo "CREATE DER&HASH SUCCESS"
