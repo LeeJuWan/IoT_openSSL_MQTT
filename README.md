@@ -1,14 +1,20 @@
-# openssl_script
+# IoT보안 프로젝트
 
 IoT 암호화 통신에 필요한 OpenSSL 인증서 자동 생성 스크립트  
 Protocol : MQTT  
-Broker : Mosquitto  
+Broker : Mosquitto [CentOS Linux release 7.6.1810 (Core)]  
 
-### Tip
-서버.csr , 클라이언트.csr의 비밀번호와 서버의 Common이름 및 인증서에 필요한 사항은 모든사항은 수정 가능  
+## 목표
+#### 브로커 서버에서 클라이언트 인증서 자동 갱신 및 단말기로의 자동 전송 진행  
+#### 전송된 인증서는 로드하여 브로커-단말기 간 'MQTT기반 TLS/SSL' 통신 진행  
+#### TLS/SSL 통신중인 상태에서 특정 토픽으로 추후 사용할 대칭키를 각 단말기에 전송  
+**!중요! 이때 각 단말기는 이미  인증서 로드 후, MQTT연결 진행과정에서 특정 토픽을 SUBSCRIBE**  
+#### 브로커 서버가 다운될 시, 단말기들은 '재연결 실패횟수'를 통해 단말 간의 데이터 통신 진행  
+#### 단말 간 통신 진행 시, 브로커 서버로부터 이미 전달받은 대칭키를 이용하여 'LEA암호' 통신 수행  
 
+( 이때 대칭키는 브로커 서버로부터 전달받으나, TLS/SSL 통신에 의해 암호화 전송되어 대칭키 노출 방어 )
 ### 테스트 환경
-CentOS Linux release 7.6.1810 (Core)  
+CentOS Linux release 7.6.1810 (Core), ESP8266(NodeMcu1.0)  
 
 ### 참고자료
 <https://m.blog.naver.com/powercm/221735407930>  
