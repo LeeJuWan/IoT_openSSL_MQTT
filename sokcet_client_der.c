@@ -27,7 +27,7 @@ int main(int argc, char *argv[]){
         struct sockaddr_in serv_adr, clnt_adr;
         socklen_t clnt_adr_sz;
   
-  //client.der파일이 있는 경로 입력
+  //client.crt의 변환된 der파일이 있는 경로 입력
 	client_der = open("/home/roo/shell/clientesp.der", O_RDONLY);
 
 	serv_sd = socket(PF_INET, SOCK_STREAM, 0);
