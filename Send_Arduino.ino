@@ -307,12 +307,7 @@ void loop()
       lastMsg = now;
       ++value;
       snprintf (msg, 75, "{\"message\": \"hello world #%ld\"}", value);
-      if(s==1){
-         client.publish("outTopic", LeaKey);
-         s=0;
-      }
-      else
-        client.publish("outTopic", msg);
+      client.publish("outTopic", msg);
     }
   }
 }
