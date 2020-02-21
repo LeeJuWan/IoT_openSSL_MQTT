@@ -46,11 +46,9 @@ void callback(char* topic, byte* payload, unsigned int length){
   }
   // (옵션1) callback 받자마자 단말 간 통신 진행
    BYTE pdwRoundKey[384] = { 0x0, };
-   BYTE pbData[16] = { "serverdie"};
-	 char receiveData[16] = { 0,};
+   BYTE receiveData ={ 0x0,};
    Socket_client = server.available();
      if(Socket_client){
-       BYTE receiveData ={ 0x0,};
        if(Socket_client.connected()){
           while(Socket_client.available()>0){
            receiveData = Socket_client.read();
@@ -277,13 +275,11 @@ void loop()
       //10회 fail 시 서버 다운으로 간주
       // (옵션2) serverDown시 단말 간 통신 진행
       if(serverDie_Check==10){
-		    BYTE pdwRoundKey[384] = { 0x0, };
-		    BYTE pbData[16] = { "serverdie"};
-	    	char receiveData[16] = { 0,};
-		    Socket_client = server.available();
+		BYTE pdwRoundKey[384] = { 0x0, };
+   		BYTE receiveData ={ 0x0,};
+		Socket_client = server.available();
 	
 		    if(Socket_client){
-		    	BYTE receiveData ={ 0x0,};
 			    if(Socket_client.connected()){
 			    	  while(Socket_client.available()>0){
 				    	  receiveData = Socket_client.read();
