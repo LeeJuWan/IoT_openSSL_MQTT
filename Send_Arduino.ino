@@ -35,7 +35,7 @@ const uint8_t mqttCertFingerprint[] = {0x11,0x22,0x33,0x3D,0x1A,0x37,0xB4,0xF0,0
 long lastMsg = 0; 
 char msg[50];
 int value = 0;
-int s=0;
+
 
 //scribe topic으로부터 메시지 수신 시 발동
 void callback(char* topic, byte* payload, unsigned int length){
@@ -45,32 +45,32 @@ void callback(char* topic, byte* payload, unsigned int length){
   for (int i = 0; i < length; i++) {
     LeaKey[i]= (char)payload[i]; //암호키 저장
   }
-  s=1;
+  // (옵션1) callback 받자마자 단말 간 통신 진행
+  WiFiClient Send_client;
+  BYTE pdwRoundKey[384] = { 0x0, };
+  BYTE pbData[16] = { "serverdie"};
+  char sendData[16] = { 0,};
+   while(true){
+     if(Send_client.connect("192.168.219.102",8888)){
+          break; //succsess!
+      }
+    }
+    LEA_Key(LeaKey, pdwRoundKey); //서버로부터 수신받은 대칭키로 라운드키 생성
+    LEA_Enc(pdwRoundKey,pbData); //생성된 라운드키로 암호화 진행
+    // 암호화 진행
+    for(int j=0; j<1;j++){
+      for(int i=0;i<16;i++)
+        sendData[i]=(char)pbData[i];
+     }
+     while(1){
+       // 다른 단말기로 암호화된 데이터 전송
+       Send_client.print(sendData);
+       delay(4000); 
+     }
 }
 
 //set MQTT port number to 8883 as per //standard
 PubSubClient client(mqtt_server, 8883, callback, espClient);
-
-
-//서버 다운으로 단말 간 암호화 통신 진행
-void esp8266Transfer(void){
-   //////////////서버죽을 시 단말간통신 LEA진행//////////////////
-  BYTE pbUserKey[16]= LeaKey;
-  BYTE pdwRoundKey[384] = { 0x0, };
-  BYTE pbData[16] = { "serverdie"};
-  int i;
-  
-  LEA_Key(pbUserKey, pdwRoundKey); //서버로부터 수신받은 대칭키로 라운드키 생성
-  LEA_Enc(pdwRoundKey,pbData); //생성된 라운드키로 암호화 진행
-  //pbData이게 암호화된건데 이제 이걸 http로 다른단말기로 던지기
-  //아직 작업 다안함 추후 webserver로 던질예정
- for(int j=0; j<1;j++){
-  Serial.print("암호문:");
-  for(i=0;i<16;i++){
-    Serial.print((char)pbData[i]);
-  }
- }
-}
 /*
   X509List serverCertList(getCertificate());
   PrivateKey serverPrivKey(getPrivateKey());
@@ -271,11 +271,33 @@ void loop()
      
     if (!client.connected()) {
       reconnect();
-      serverDie_Check++; //서버 연결 fail 카운팅
+      ++serverDie_Check; //서버 연결 fail 카운팅
       
       delay(3000); 
-      if(serverDie_Check==10){ //10회 fail 시 서버 다운으로 간주
-        esp8266Transfer();
+      if(serverDie_Check==10){
+        //10회 fail 시 서버 다운으로 간주
+        // (옵션2) serverDown시 단말 간 통신 진행
+        WiFiClient Send_client;
+        BYTE pdwRoundKey[384] = { 0x0, };
+        BYTE pbData[16] = { "serverdie"};
+        char sendData[16] = { 0,};
+        while(true){
+          if(Send_client.connect("192.168.219.102",8888)){
+            break; //succsess!
+          }
+        }
+        LEA_Key(LeaKey, pdwRoundKey); //서버로부터 수신받은 대칭키로 라운드키 생성
+        LEA_Enc(pdwRoundKey,pbData); //생성된 라운드키로 암호화 진행
+        // 암호화 진행
+        for(int j=0; j<1;j++){
+          for(int i=0;i<16;i++)
+            sendData[i]=(char)pbData[i];
+        }
+        while(1){
+        // 다른 단말기로 암호화된 데이터 전송
+          Send_client.print(sendData);
+          delay(4000); 
+        }
       }
     }
     client.loop();
