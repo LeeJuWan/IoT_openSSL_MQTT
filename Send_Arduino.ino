@@ -51,7 +51,7 @@ void callback(char* topic, byte* payload, unsigned int length){
   BYTE pbData[16] = { "serverdie"};
   char sendData[16] = { 0,};
    while(true){
-     if(Send_client.connect("192.168.219.102",8888)){
+     if(Send_client.connect("192.168.xxx.xxx(단말기ip주소)",8888)){
           break; //succsess!
       }
     }
